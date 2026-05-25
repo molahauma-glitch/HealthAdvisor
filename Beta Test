@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAdvisor - Solusi Tumbuh Ideal & Sehat</title>
+    <link href="https://fonts.googleapis.com/css2=family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2e86de;
+            --primary-light: #ebf3fc;
+            --text-dark: #2f3542;
+            --text-muted: #747d8c;
+            --bg-body: #f1f2f6;
+            --success: #1dd1a1;
+            --accent: #ff9f43;
+            --danger: #ff6b6b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* NAVBAR (Badge Kanan Atas Dihapus) */
+        header {
+            background-color: white;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Membuat judul di tengah */
+        }
+        .logo { font-size: 20px; font-weight: 700; color: var(--primary); }
+
+        main {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero-section {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            text-align: center;
+        }
+        .hero-icon { font-size: 45px; margin-bottom: 10px; }
+        .hero-section h2 { font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+        .hero-section p { font-size: 13px; color: var(--text-muted); }
+
+        /* ARTIKEL SECTION (Sekarang bisa diklik) */
+        .article-section {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .section-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--text-dark); border-left: 4px solid var(--primary); padding-left: 10px; }
+        
+        .article-card {
+            background: var(--primary-light);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .article-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .article-card h4 { font-size: 14px; color: var(--primary); margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .article-card h4::after { content: '➔'; font-size: 12px; color: var(--primary); }
+        .article-card p { font-size: 12px; color: #57606f; }
+
+        /* POPUP MODAL ARTIKEL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            animation: popUp 0.3s ease;
+        }
+        @keyframes popUp {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 24px; cursor: pointer; color: var(--text-muted);
+        }
+        .modal-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 15px; padding-right: 20px; }
+        .modal-body { font-size: 14px; color: var(--text-dark); max-height: 350px; overflow-y: auto; }
+        .modal-body p { margin-bottom: 12px; }
+
+        /* CALCULATOR SECTION */
+        .calculator-section {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 5px; display: block; }
+        
+        input[type="number"] { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #dfe6e9; 
+            border-radius: 8px; 
+            font-size: 15px;
+        }
+        input[type="number"]:focus { border-color: var(--primary); outline: none; }
+
+        .gender-options { display: flex; gap: 10px; }
+        .gender-option { flex: 1; }
+        .gender-option input[type="radio"] { display: none; }
+        .gender-option label {
+            background-color: #fff;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .gender-option input[type="radio"]:checked + label {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* BUG FIX: CARD HASIL REVISI (Tampilan Sejajar & Simetris) */
+        #hasil-card { 
+            display: none; 
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 25px 20px;
+            border: 2px solid var(--primary);
+            margin-bottom: 30px;
+        }
+        .hasil-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; /* Jarak pas antar elemen */
+            margin-bottom: 20px; 
+            border-bottom: 1px solid #dfe6e9; 
+            padding-bottom: 15px;
+        }
+        .gender-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-light);
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+        }
+        .gender-icon { font-size: 40px; }
+        .skor-container { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+        .skor-bmi { font-size: 32px; font-weight: 700; line-height: 1; color: var(--text-dark); }
+        .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: white; }
+        
+        .recommendation-group { margin-top: 15px; }
+        .recommendation-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 5px; }
+        .recommendation-content { font-size: 13px; color: #57606f; background-color: var(--bg-body); padding: 12px; border-radius: 8px; }
+
+        .status-kurus { background-color: var(--danger); }
+        .status-ideal { background-color: var(--success); }
+        .status-gemuk { background-color: var(--accent); }
+        .status-obesitas { background-color: #e84118; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🩺 HealthAdvisor</div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-icon">🛡️</div>
+            <h2>Platform Kesehatan Tepercaya</h2>
+            <p>Selamat datang! HealthAdvisor adalah alat digital interaktif berbasis edukasi untuk mendeteksi indeks massa tubuh serta memberikan solusi asupan gizi yang aman.</p>
+        </section>
+
+        <section class="article-section">
+            <h3 class="section-title">Pahami Tubuh Anda (Klik untuk Membaca)</h3>
+            
+            <div class="article-card" onclick="bukaArtikel(1)">
+                <h4>⚠️ Bahaya Berat Badan Kurang (Underweight)</h4>
+                <p>Ketahui mengapa berat badan terlalu rendah berbahaya bagi imunitas dan tulang Anda...</p>
+            </div>
+
+            <div class="article-card" onclick="bukaArtikel(2)">
+                <h4>🚀 Rahasia Memaksimalkan Tinggi Badan Remaja</h4>
+                <p>Panduan penting memanfaatkan masa keemasan pertumbuhan tulang sebelum berhenti...</p>
+            </div>
+        </section>
+
+        <section class="calculator-section">
+            <h3 class="section-title">Mulai Analisis Tubuh</h3>
+            
+            <div class="input-group">
+                <label>Jenis Kelamin:</label>
+                <div class="gender-options">
+                    <div class="gender-option">
+                        <input type="radio" name="gender" id="pria" value="pria" checked>
+                        <label for="pria">👨 Laki-laki</label>
+                    </div>
+                    <div class="gender-option">
+                        <input type="radio" name="gender" id="wanita" value="wanita">
+                        <label for="wanita">👩 Perempuan</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="umur">Umur Anda (Tahun):</label>
+                <input type="number" id="umur" placeholder="Contoh: 15">
+            </div>
+
+            <div class="input-group">
+                <label for="berat">Berat Badan (kg):</label>
+                <input type="number" id="berat" placeholder="Contoh: 60">
+            </div>
+
+            <div class="input-group">
+                <label for="tinggi">Tinggi Badan (cm):</label>
+                <input type="number" id="tinggi" placeholder="Contoh: 170">
+            </div>
+            
+            <button onclick="hitungKesehatan()">Cek Hasil Analisis</button>
+        </section>
+
+        <section id="hasil-card">
+            <div class="hasil-header">
+                <div class="gender-container">
+                    <div id="gender-icon" class="gender-icon">👨</div>
+                </div>
+                <div class="skor-container">
+                    <div id="status-bmi-text" class="status-badge">Kategori</div>
+                    <div id="skor-bmi" class="skor-bmi">0.0</div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Skor BMI Anda</div>
+                </div>
+            </div>
+
+            <div class="recommendation-group">
+                <div class="recommendation-title">🥗 Rekomendasi Asupan Gizi:</div>
+                <div id="asupan-gizi" class="recommendation-content"></div>
+            </div>
+
+            <div id="pertumbuhan-section" class="recommendation-group">
+                <div class="recommendation-title">🚀 Tips Tambah Tinggi & Berat Badan:</div>
+                <div id="tips-pertumbuhan" class="recommendation-content"></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="tutupArtikel()">&times;</span>
+            <div id="modalTitle" class="modal-title">Judul Berita</div>
+            <div id="modalBody" class="modal-body">Isi Berita</div>
+        </div>
+    </div>
+
+    <script>
+        // DATA ARTIKEL BERITA (Sistem Informasi Sekolah)
+        const dataArtikel = {
+            1: {
+                judul: "⚠️ Bahaya Tubuh Terlalu Kurus bagi Imunitas",
+                isi: "<p>Berdasarkan riset kesehatan, berat badan di bawah standar (underweight) bukan sekadar masalah penampilan. Tubuh yang terlalu kurus menandakan kekurangan nutrisi mikro penting.</p><p><strong>Dampak Buruk:</strong><br>1. <strong>Sistem Imun Lemah:</strong> Tubuh kekurangan bahan baku untuk membuat sel darah putih, sehingga Anda gampang terserang flu dan infeksi.<br>2. <strong>Anemia Kronis:</strong> Kekurangan zat besi menyebabkan tubuh mudah lelah, lemas, dan sulit berkonsentrasi saat belajar.<br>3. <strong>Kerapuhan Tulang:</strong> Kepadatan tulang tidak berkembang maksimal, meningkatkan risiko cedera.</p><p><em>Solusi: Ikuti rekomendasi asupan gizi kalkulator di bawah dengan menambah surplus kalori protein.</em></p>"
+            },
+            2: {
+                judul: "🚀 Panduan Medis Memaksimalkan Tinggi Badan",
+                isi: "<p>Masa remaja adalah satu-satunya kesempatan emas untuk mendongkrak tinggi badan. Setelah melewati usia 20-21 tahun, lempeng pertumbuhan (epifisis) pada tulang panjang akan mengeras dan mengunci.</p><p><strong>Faktor Penentu Tinggi Badan:</strong><br>1. <strong>Hormon HGH:</strong> Hormon pertumbuhan diproduksi massal saat tidur nyenyak di malam hari (jam 10 malam - 2 pagi). Kurang tidur membuat badan pendek.<br>2. <strong>Nutrisi Kalsium:</strong> Tulang membutuhkan pasokan kalsium konstan dari susu, telur, dan sayuran hijau.<br>3. <strong>Gaya Mekanik:</strong> Olahraga melompat seperti skipping, basket, atau berenang memberikan tekanan positif pada tulang agar memanjang.</p>"
+            }
+        };
+
+        function bukaArtikel(id) {
+            document.getElementById('modalTitle').innerHTML = dataArtikel[id].judul;
+            document.getElementById('modalBody').innerHTML = dataArtikel[id].isi;
+            document.getElementById('articleModal').style.display = 'flex';
+        }
+
+        function tutupArtikel() {
+            document.getElementById('articleModal').style.display = 'none';
+        }
+
+        // Menutup popup jika klik di luar kotak putih
+        window.onclick = function(event) {
+            const modal = document.getElementById('articleModal');
+            if (event.target == modal) { modal.style.display = 'none'; }
+        }
+
+        // JAVASCRIPT LOGIKA UTAMA
+        function hitungKesehatan() {
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const umur = parseInt(document.getElementById('umur').value);
+            const berat = parseFloat(document.getElementById('berat').value);
+            const tinggiCm = parseFloat(document.getElementById('tinggi').value);
+            
+            if (!umur || !berat || !tinggiCm) {
+                alert("Mohon masukkan data umur, berat, dan tinggi Anda terlebih dahulu!");
+                return;
+            }
+
+            const tinggiMeter = tinggiCm / 100;
+            const bmi = berat / (tinggiMeter * tinggiMeter);
+            const bmiSkorFinal = bmi.toFixed(1);
+
+            let statusBmiText = "";
+            let statusBmiClass = "";
+            let asupanGizi = "";
+            let tipsPertumbuhan = "";
+
+            if (bmi < 18.5) {
+                statusBmiText = "Berat Rendah (Kurus)";
+                statusBmiClass = "status-kurus";
+                asupanGizi = "Anda membutuhkan <strong>Surplus Kalori</strong>. Konsumsi makanan padat gizi yang kaya protein (daging ayam, telur, tempe, susu) dan karbohidrat kompleks. Tambah frekuensi makan menjadi 4-5 kali sehari dengan porsi kecil tapi sering.";
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                statusBmiText = "Berat Ideal (Normal)";
+                statusBmiClass = "status-ideal";
+                asupanGizi = "Selamat, tubuh Anda sehat! Tetap pertahankan pola makan seimbang sesuai panduan Kemenkes 'Isi Piringku'. Batasi konsumsi junk food dan perbanyak minum air putih.";
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                statusBmiText = "Kelebihan Berat (Gemuk)";
+                statusBmiClass = "status-gemuk";
+                asupanGizi = "Disarankan untuk melakukan <strong>Defisit Kalori</strong> secara sehat. Kurangi porsi makanan manis, gorengan, dan tepung. Perbanyak konsumsi serat dari sayur-sayuran dan buah segar.";
+            } else {
+                statusBmiText = "Obesitas";
+                statusBmiClass = "status-obesitas";
+                asupanGizi = "Peringatan! Kondisi ini berisiko memicu diabetes dan penyakit jantung. Kurangi porsi karbohidrat dan gula secara konsisten, lalu cobalah berkonsultasi dengan dokter untuk program penurunan berat badan yang aman.";
+            }
+
+            if (umur <= 21) {
+                tipsPertumbuhan = "Karena usia Anda masih di bawah 21 tahun, Anda <strong>sangat berpotensi untuk bertambah tinggi</strong>. Lakukan olahraga penstimulasi tulang seperti basket, skipping (lompat tali), atau berenang 3 kali seminggu. Pastikan tidur malam 8 jam penuh karena <em>Human Growth Hormone</em> diproduksi maksimal saat tidur nyenyak.";
+            } else {
+                tipsPertumbuhan = "Di usia dewasa, fokuslah pada latihan beban (strength training) untuk menjaga kekuatan massa otot dan kepadatan tulang agar tubuh tetap tegap.";
+            }
+
+            document.getElementById('hasil-card').style.display = 'block';
+            document.getElementById('skor-bmi').innerHTML = bmiSkorFinal;
+            document.getElementById('status-bmi-text').innerHTML = statusBmiText;
+            
+            const badge = document.getElementById('status-bmi-text');
+            badge.className = `status-badge ${statusBmiClass}`;
+            
+            document.getElementById('gender-icon').innerHTML = (gender === 'pria') ? "👨" : "👩";
+            document.getElementById('asupan-gizi').innerHTML = asupanGizi;
+            document.getElementById('tips-pertumbuhan').innerHTML = tipsPertumbuhan;
+
+            window.scrollTo({ top: document.getElementById('hasil-card').offsetTop - 20, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
